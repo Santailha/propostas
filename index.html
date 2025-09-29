@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Propostas - Site Santa Ilha</title>
+    <title>Análise Interativa de Propostas - Santa Ilha Imóveis</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,6 +12,12 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        /* Santa Ilha Brand Colors */
+        :root {
+            --cor-azul: #3d357e;
+            --cor-amarela: #edae0f;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
             background-color: #f0f2f5;
@@ -21,7 +27,7 @@
         }
         .main-title {
             text-align: center;
-            color: #1c2e4a;
+            color: var(--cor-azul);
             margin-bottom: 2em;
         }
         .charts-container {
@@ -49,7 +55,7 @@
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.08);
             padding: 1.5em;
-            border-top: 5px solid #007bff;
+            border-top: 5px solid var(--cor-azul);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .card:hover {
@@ -64,7 +70,7 @@
         }
         .card-header h2 {
             margin: 0;
-            color: #1c2e4a;
+            color: var(--cor-azul);
             font-size: 1.6em;
         }
         .card-summary {
@@ -78,7 +84,7 @@
             padding-top: 1em;
         }
         .card-details h4 {
-            color: #1c2e4a;
+            color: var(--cor-azul);
             margin-top: 1em;
             margin-bottom: 0.5em;
         }
@@ -94,7 +100,7 @@
         .analysis .pros { color: #28a745; }
         
         .toggle-button {
-            background-color: #007bff;
+            background-color: var(--cor-azul);
             color: white;
             border: none;
             padding: 0.6em 1em;
@@ -104,19 +110,14 @@
             transition: background-color 0.3s ease;
         }
         .toggle-button:hover {
-            background-color: #0056b3;
+            background-color: var(--cor-amarela);
+            color: #444;
         }
-
-        /* Color overrides for each card */
-        .card.webcore { border-color: #1abc9c; }
-        .card.v4 { border-color: #e74c3c; }
-        .card.upsites { border-color: #3498db; }
-        .card.leadlink { border-color: #f39c12; }
     </style>
 </head>
 <body>
 
-    <h1 class="main-title">Propostas - Site Santa Ilha</h1>
+    <h1 class="main-title">Análise Interativa de Propostas - Santa Ilha</h1>
 
     <div class="charts-container">
         <div class="chart-wrapper">
@@ -128,7 +129,7 @@
     </div>
 
     <div class="cards-container">
-        <div class="card webcore">
+        <div class="card">
             <div class="card-header">
                 <h2>Webcore</h2>
             </div>
@@ -154,7 +155,7 @@
             </div>
         </div>
 
-        <div class="card v4">
+        <div class="card">
             <div class="card-header">
                 <h2>V4 Company</h2>
             </div>
@@ -180,7 +181,7 @@
             </div>
         </div>
 
-        <div class="card upsites">
+        <div class="card">
             <div class="card-header">
                 <h2>UP Sites</h2>
             </div>
@@ -206,7 +207,7 @@
             </div>
         </div>
 
-        <div class="card leadlink">
+        <div class="card">
             <div class="card-header">
                 <h2>LeadLink</h2>
             </div>
@@ -234,12 +235,15 @@
     </div>
 
     <script>
+        // --- Brand Colors ---
+        const primaryColor = '#3d357e';
+        const accentColor = '#edae0f';
+
         // --- Data for Charts ---
         const labels = ['Webcore', 'V4 Company', 'UP Sites', 'LeadLink'];
         const costs = [100000, 31000, 15727, 30244];
         const times = [90, 60, 60, 0]; // 0 for "Não informado"
-        const backgroundColors = ['#1abc9c', '#e74c3c', '#3498db', '#f39c12'];
-
+        
         // --- Chart Configurations ---
         const costConfig = {
             type: 'bar',
@@ -248,7 +252,8 @@
                 datasets: [{
                     label: 'Investimento Inicial (R$)',
                     data: costs,
-                    backgroundColor: backgroundColors,
+                    backgroundColor: primaryColor,
+                    hoverBackgroundColor: accentColor
                 }]
             },
             options: {
@@ -258,7 +263,8 @@
                     title: {
                         display: true,
                         text: 'Comparativo de Investimento Inicial',
-                        font: { size: 18, weight: '600' }
+                        font: { size: 18, weight: '600' },
+                        color: '#333'
                     }
                 },
                 scales: {
@@ -281,7 +287,8 @@
                 datasets: [{
                     label: 'Prazo de Entrega (dias)',
                     data: times,
-                    backgroundColor: backgroundColors,
+                    backgroundColor: primaryColor,
+                    hoverBackgroundColor: accentColor
                 }]
             },
             options: {
@@ -291,7 +298,8 @@
                     title: {
                         display: true,
                         text: 'Comparativo de Prazo de Entrega',
-                        font: { size: 18, weight: '600' }
+                        font: { size: 18, weight: '600' },
+                        color: '#333'
                     }
                 },
                 scales: {
