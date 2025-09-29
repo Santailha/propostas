@@ -28,7 +28,13 @@
         .main-title {
             text-align: center;
             color: var(--cor-azul);
-            margin-bottom: 2em;
+            margin-bottom: 1em;
+        }
+        .logo-image {
+            display: block;
+            margin: 0 auto 2.5em auto; /* Center the image and add space below */
+            max-width: 100px; /* Adjust size as needed */
+            height: auto;
         }
         .charts-container {
             display: flex;
@@ -55,7 +61,7 @@
             border-radius: 12px;
             box-shadow: 0 6px 20px rgba(0,0,0,0.08);
             padding: 1.5em;
-            border-top: 5px solid var(--cor-azul);
+            border-top: 5px solid var(--cor-amarela); /* CHANGED TO YELLOW */
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
         .card:hover {
@@ -100,24 +106,25 @@
         .analysis .pros { color: #28a745; }
         
         .toggle-button {
-            background-color: var(--cor-azul);
-            color: white;
+            background-color: var(--cor-amarela); /* CHANGED TO YELLOW */
+            color: var(--cor-azul); /* CHANGED TO BLUE TEXT FOR CONTRAST */
             border: none;
             padding: 0.6em 1em;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
         .toggle-button:hover {
-            background-color: var(--cor-amarela);
-            color: #444;
+            background-color: var(--cor-azul); /* CHANGED TO BLUE ON HOVER */
+            color: #fff; /* CHANGED TO WHITE TEXT ON HOVER */
         }
     </style>
 </head>
 <body>
 
-    <h1 class="main-title">Análise Interativa de Propostas - Santa Ilha</h1>
+    <h1 class="main-title">Análise Interativa de Propostas</h1>
+    <img src="faviconS.png" alt="Logo Santa Ilha" class="logo-image">
 
     <div class="charts-container">
         <div class="chart-wrapper">
