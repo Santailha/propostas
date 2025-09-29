@@ -3,243 +3,333 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Análise de Propostas - Site Santa Ilha</title>
+    <title>Análise Interativa de Propostas - Site Santa Ilha</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f7f6;
-            color: #333;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            color: #444;
             margin: 0;
-            padding: 20px;
+            padding: 2em;
         }
         .main-title {
             text-align: center;
-            color: #2c3e50;
-            margin-bottom: 30px;
+            color: #1c2e4a;
+            margin-bottom: 2em;
         }
-        .container {
+        .charts-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 20px;
+            gap: 2em;
+            margin-bottom: 3em;
+        }
+        .chart-wrapper {
+            background: #fff;
+            padding: 1.5em;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 500px;
+        }
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2em;
         }
         .card {
             background-color: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-            padding: 20px;
-            box-sizing: border-box;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+            padding: 1.5em;
+            border-top: 5px solid #007bff;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.12);
+        }
+        .card-header {
             display: flex;
-            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1em;
         }
-        .card h2 {
-            color: #16a085;
-            border-bottom: 2px solid #1abc9c;
-            padding-bottom: 10px;
-            margin-top: 0;
+        .card-header h2 {
+            margin: 0;
+            color: #1c2e4a;
+            font-size: 1.6em;
         }
-        .card h4 {
-            color: #2c3e50;
-            margin-top: 20px;
-            margin-bottom: 10px;
-        }
-        .card ul {
-            padding-left: 20px;
-            list-style-type: '✓  ';
-        }
-        .card ul li, .card p {
-            line-height: 1.6;
-        }
-        .analysis .pros {
-            color: #27ae60;
-            font-weight: bold;
-        }
-        .analysis .cons {
-            color: #c0392b;
-            font-weight: bold;
-        }
-        .price {
-            margin-top: auto;
-            border-top: 1px solid #ecf0f1;
-            padding-top: 15px;
-        }
-        .price .total {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #16a085;
-        }
-        .price .details {
+        .card-summary {
             font-size: 0.9em;
-            color: #7f8c8d;
+            color: #666;
+            margin-bottom: 1.5em;
+        }
+        .card-details {
+            display: none; /* Hidden by default */
+            border-top: 1px solid #e9ecef;
+            padding-top: 1em;
+        }
+        .card-details h4 {
+            color: #1c2e4a;
+            margin-top: 1em;
+            margin-bottom: 0.5em;
+        }
+        .card-details ul {
+            padding-left: 1.2em;
+            list-style-type: '→ ';
+            color: #555;
+        }
+        .card-details ul li {
+            margin-bottom: 0.5em;
+            line-height: 1.5;
+        }
+        .analysis .pros { color: #28a745; }
+        .analysis .cons { color: #dc3545; }
+        
+        .toggle-button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 0.6em 1em;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+        .toggle-button:hover {
+            background-color: #0056b3;
         }
 
-        /* Responsive layout for smaller screens */
-        @media (min-width: 800px) {
-            .card {
-                width: calc(50% - 20px);
-            }
-        }
-
-        @media (min-width: 1200px) {
-            .card {
-                width: calc(25% - 20px);
-            }
-        }
+        /* Color overrides for each card */
+        .card.webcore { border-color: #1abc9c; }
+        .card.v4 { border-color: #e74c3c; }
+        .card.upsites { border-color: #3498db; }
+        .card.leadlink { border-color: #f39c12; }
     </style>
 </head>
 <body>
 
-    <h1 class="main-title">Painel de Análise de Propostas - Novo Site Santa Ilha</h1>
+    <h1 class="main-title">Análise Interativa de Propostas</h1>
 
-    <div class="container">
-        <div class="card">
-            <h2>Webcore Interactive</h2>
-            
-            <h4>Resumo da Proposta</h4>
-            [cite_start]<p>Foco em um projeto completo e estratégico, com recomendações para melhorar a experiência do usuário (busca interativa, guias de bairros, quiz) e criar um site moderno e intuitivo[cite: 308, 315, 457, 475, 496].</p>
-            
-            <h4>Tecnologia Proposta</h4>
-            [cite_start]<p>Gerenciamento de páginas pelo Dato CMS, com hospedagem em servidores cloud da AWS[cite: 441, 699].</p>
-
-            <h4>Principais Entregáveis</h4>
-            <ul>
-                [cite_start]<li>Processo de desenvolvimento completo em 9 etapas (do estudo ao pós-lançamento)[cite: 360].</li>
-                [cite_start]<li>Foco em pilares como UX, Performance, Segurança e SEO[cite: 332, 334, 337, 339, 345].</li>
-                [cite_start]<li>Recursos de acessibilidade e integração com Google Analytics inclusa[cite: 398, 422].</li>
-                [cite_start]<li>Treinamento para a equipe[cite: 382].</li>
-            </ul>
-
-            <h4>Prazo de Entrega</h4>
-            [cite_start]<p>Média de 90 dias[cite: 713].</p>
-
-            <div class="analysis">
-                <h4>Minha Análise</h4>
-                <p><span class="pros">Prós:</span> Proposta muito detalhada e profissional, com processo de trabalho bem estruturado e foco em estratégia de negócio. Demonstram muita confiança em UI/UX.</p>
-                <p><span class="cons">Contras:</span> Investimento inicial mais elevado. [cite_start]Custos recorrentes de hospedagem e CMS[cite: 699].</p>
-            </div>
-
-            <div class="price">
-                <h4>Valor do Investimento</h4>
-                <div class="total">R$ 100.000,00</div>
-                <div class="details">
-                    + [cite_start]R$ 7.200/ano (Hosp.) [cite: 699]<br>
-                    + [cite_start]€390/ano (CMS) [cite: 699]<br>
-                    + [cite_start]R$ 1.200/mês (Manut. Opcional) [cite: 699]
-                </div>
-            </div>
+    <div class="charts-container">
+        <div class="chart-wrapper">
+            <canvas id="costChart"></canvas>
         </div>
-
-        <div class="card">
-            <h2>V4 Company</h2>
-            
-            <h4>Resumo da Proposta</h4>
-            [cite_start]<p>Solução de negócio digital com processo dividido em macro-etapas (Estratégia, UI/UX, Dev) e recursos de consultoria e marketing digital[cite: 174, 175, 262].</p>
-            
-            <h4>Tecnologia Proposta</h4>
-            [cite_start]<p>Não especifica a plataforma/CMS a ser utilizada[cite: 179, 248]. [cite_start]Garante compatibilidade com os principais navegadores[cite: 233, 238].</p>
-
-            <h4>Principais Entregáveis</h4>
-            <ul>
-                [cite_start]<li>Construção do site em módulos[cite: 283, 286, 289].</li>
-                [cite_start]<li>Integração com GTM e CRM[cite: 211].</li>
-                [cite_start]<li>Prototipagem do layout[cite: 207].</li>
-                [cite_start]<li>Monitoramento por 30 dias após o lançamento[cite: 254].</li>
-            </ul>
-
-            <h4>Prazo de Entrega</h4>
-            [cite_start]<p>Tempo estimado de 60 dias[cite: 264].</p>
-
-            <div class="analysis">
-                <h4>Minha Análise</h4>
-                <p><span class="pros">Prós:</span> Valor de investimento inicial consideravelmente mais baixo. [cite_start]Prazo de entrega mais curto[cite: 285, 264].</p>
-                <p><span class="cons">Contras:</span> Proposta genérica, fraca técnica e comercialmente. Falta de detalhes técnicos sobre a plataforma. [cite_start]Funcionalidades essenciais (login, edição) cobradas como módulos separados[cite: 286].</p>
-            </div>
-
-            <div class="price">
-                <h4>Valor do Investimento</h4>
-                <div class="total">R$ 31.000,00</div>
-                <div class="details">
-                    (Soma dos módulos iniciais) [cite_start][cite: 285, 288, 291]<br>
-                    + [cite_start]R$ 2.500/mês (Otimização recorrente) [cite: 294]
-                </div>
-            </div>
+        <div class="chart-wrapper">
+            <canvas id="timeChart"></canvas>
         </div>
-
-        <div class="card">
-            <h2>UP Sites</h2>
-            
-            <h4>Resumo da Proposta</h4>
-            [cite_start]<p>Diferenciais como gerente de projetos dedicado, autonomia total para o cliente (código aberto) e forte foco em SEO Onpage como padrão[cite: 8, 10, 13].</p>
-            
-            <h4>Tecnologia Proposta</h4>
-            [cite_start]<p>Site desenvolvido em WordPress[cite: 20].</p>
-
-            <h4>Principais Entregáveis</h4>
-            <ul>
-                [cite_start]<li>Site "Multi Page" com layout artesanal e responsivo[cite: 22, 23, 24].</li>
-                [cite_start]<li>Listagem de imóveis com filtros de busca[cite: 32].</li>
-                [cite_start]<li>Integração com o CRM Vista[cite: 34].</li>
-                [cite_start]<li>Implementação completa de SEO Onpage inclusa[cite: 30].</li>
-                [cite_start]<li>Painel de edição amigável e vídeos tutoriais[cite: 138, 139].</li>
-            </ul>
-
-            <h4>Prazo de Entrega</h4>
-            [cite_start]<p>60 dias úteis[cite: 123].</p>
-
-            <div class="analysis">
-                <h4>Minha Análise</h4>
-                <p><span class="pros">Prós:</span> Equipe comercial excelente. Muito conhecimento de SEO e da integração com o sistema Vista. Valor competitivo e proposta de autonomia total.</p>
-                <p><span class="cons">Contras:</span> A principal preocupação foi com o UI/UX de projetos anteriores no portfólio.</p>
-            </div>
-
-            <div class="price">
-                <h4>Valor do Investimento</h4>
-                <div class="total">R$ 15.726,72</div>
-                <div class="details">
-                    (8 parcelas de R$ 1.965,84) [cite_start][cite: 121]
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <h2>LeadLink</h2>
-            
-            <h4>Resumo da Proposta</h4>
-            <p>Proposta 100% focada no mercado imobiliário, apresentada de forma interativa e modular, permitindo a escolha de um plano base e adição de dezenas de funcionalidades específicas.</p>
-            
-            <h4>Tecnologia Proposta</h4>
-            <p>A menção a um "Blog Padrão WordPress" indica que a plataforma principal é o WordPress.</p>
-
-            <h4>Principais Entregáveis</h4>
-            <ul>
-                <li>Site no plano "Personalizado".</li>
-                <li>Integração com o sistema CRM Vista/Loft.</li>
-                <li>Pacote extenso com 16 funcionalidades extras, incluindo busca avançada (mapa, tempo real) e um pacote completo de "SEO Master".</li>
-            </ul>
-
-            <h4>Prazo de Entrega</h4>
-            <p>Não foi informado na proposta online.</p>
-
-            <div class="analysis">
-                <h4>Minha Análise</h4>
-                <p><span class="pros">Prós:</span> Empresa especialista no mercado imobiliário, com forte portfólio e conhecimento de SEO e integrações. Proposta granular que permite total controle do escopo.</p>
-                <p><span class="cons">Contras:</span> Prazo de entrega não informado. O modelo com dezenas de itens pode tornar a análise do escopo um pouco mais complexa.</p>
-            </div>
-
-            <div class="price">
-                <h4>Valor do Investimento</h4>
-                <div class="total">R$ 30.244,00</div>
-                <div class="details">
-                    (À vista com desconto)<br>
-                    Parcelamento: 12x de R$ 2.653 ou 21x de R$ 1.735.<br>
-                    Suporte padrão sem mensalidade.
-                </div>
-            </div>
-        </div>
-
     </div>
+
+    <div class="cards-container">
+        <div class="card webcore">
+            <div class="card-header">
+                <h2>Webcore</h2>
+            </div>
+            <div class="card-summary">
+                <p><strong>Proposta Premium:</strong> Foco em estratégia, design e processo detalhado.</p>
+                <p><strong>Valor:</strong> R$ 100.000,00 + anuais</p>
+                <p><strong>Prazo:</strong> 90 dias</p>
+            </div>
+             <button class="toggle-button" onclick="toggleDetails(this)">Ver Detalhes</button>
+            <div class="card-details">
+                <h4>Tecnologia Proposta</h4>
+                <p>Dato CMS, com hospedagem em servidores AWS.</p>
+                <h4>Principais Entregáveis</h4>
+                <ul>
+                    <li>Processo de desenvolvimento completo em 9 etapas.</li>
+                    <li>Foco em UX, Performance, Segurança e SEO.</li>
+                    <li>Recursos de acessibilidade e integração com Google Analytics.</li>
+                </ul>
+                <div class="analysis">
+                    <h4>Análise</h4>
+                    <p><b class="pros">Prós:</b> Proposta muito detalhada, processo bem estruturado, foco em estratégia de negócio, confiança em UI/UX.</p>
+                    <p><b class="cons">Contras:</b> Investimento inicial mais elevado, custos recorrentes de hospedagem e CMS.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card v4">
+            <div class="card-header">
+                <h2>V4 Company</h2>
+            </div>
+            <div class="card-summary">
+                 <p><strong>Proposta Modular:</strong> Solução dividida em etapas e módulos de negócio.</p>
+                 <p><strong>Valor:</strong> R$ 31.000,00 + mensal</p>
+                 <p><strong>Prazo:</strong> 60 dias</p>
+            </div>
+            <button class="toggle-button" onclick="toggleDetails(this)">Ver Detalhes</button>
+            <div class="card-details">
+                <h4>Tecnologia Proposta</h4>
+                <p>Não especificada na proposta.</p>
+                <h4>Principais Entregáveis</h4>
+                <ul>
+                    <li>Construção do site em módulos.</li>
+                    <li>Integração com GTM e CRM.</li>
+                    <li>Monitoramento por 30 dias após o lançamento.</li>
+                </ul>
+                <div class="analysis">
+                    <h4>Análise</h4>
+                    <p><b class="pros">Prós:</b> Valor de investimento inicial mais baixo, prazo de entrega mais curto.</p>
+                    <p><b class="cons">Contras:</b> Proposta genérica, fraca técnica e comercialmente, falta de detalhes, funcionalidades essenciais cobradas à parte.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card upsites">
+            <div class="card-header">
+                <h2>UP Sites</h2>
+            </div>
+             <div class="card-summary">
+                 <p><strong>Proposta Equilibrada:</strong> Foco em SEO, autonomia e integração específica.</p>
+                 <p><strong>Valor:</strong> R$ 15.726,72</p>
+                 <p><strong>Prazo:</strong> 60 dias úteis</p>
+            </div>
+            <button class="toggle-button" onclick="toggleDetails(this)">Ver Detalhes</button>
+            <div class="card-details">
+                <h4>Tecnologia Proposta</h4>
+                <p>WordPress.</p>
+                <h4>Principais Entregáveis</h4>
+                <ul>
+                    <li>Site "Multi Page" com layout artesanal.</li>
+                    <li>Integração com o CRM Vista.</li>
+                    <li>Implementação completa de SEO Onpage como padrão.</li>
+                </ul>
+                <div class="analysis">
+                    <h4>Análise</h4>
+                    <p><b class="pros">Prós:</b> Excelente equipe comercial, conhecimento profundo de SEO e da integração com Vista, valor competitivo, autonomia para o cliente.</p>
+                    <p><b class="cons">Contras:</b> Preocupação com a qualidade do UI/UX de projetos anteriores no portfólio.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card leadlink">
+            <div class="card-header">
+                <h2>LeadLink</h2>
+            </div>
+            <div class="card-summary">
+                 <p><strong>Proposta Especialista:</strong> Foco 100% no mercado imobiliário, altamente customizável.</p>
+                 <p><strong>Valor:</strong> R$ 30.244,00</p>
+                 <p><strong>Prazo:</strong> Não informado</p>
+            </div>
+            <button class="toggle-button" onclick="toggleDetails(this)">Ver Detalhes</button>
+            <div class="card-details">
+                <h4>Tecnologia Proposta</h4>
+                <p>WordPress (inferido pela proposta).</p>
+                <h4>Principais Entregáveis</h4>
+                <ul>
+                    <li>Site no plano "Personalizado".</li>
+                    <li>Integração com o CRM Vista/Loft.</li>
+                    <li>Pacote com 16 funcionalidades extras, incluindo busca avançada e "SEO Master".</li>
+                </ul>
+                <div class="analysis">
+                    <h4>Análise</h4>
+                    <p><b class="pros">Prós:</b> Especialista no mercado imobiliário, conhecimento de SEO e CRMs, proposta granular com total controle do escopo.</p>
+                    <p><b class="cons">Contras:</b> Prazo de entrega não informado, complexidade na análise pelo grande número de itens.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Data for Charts ---
+        const labels = ['Webcore', 'V4 Company', 'UP Sites', 'LeadLink'];
+        const costs = [100000, 31000, 15727, 30244];
+        const times = [90, 60, 60, 0]; // 0 for "Não informado"
+        const backgroundColors = ['#1abc9c', '#e74c3c', '#3498db', '#f39c12'];
+
+        // --- Chart Configurations ---
+        const costConfig = {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Investimento Inicial (R$)',
+                    data: costs,
+                    backgroundColor: backgroundColors,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Comparativo de Investimento Inicial',
+                        font: { size: 18, weight: '600' }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return 'R$ ' + (value / 1000) + 'k';
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        const timeConfig = {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Prazo de Entrega (dias)',
+                    data: times,
+                    backgroundColor: backgroundColors,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Comparativo de Prazo de Entrega',
+                        font: { size: 18, weight: '600' }
+                    }
+                },
+                scales: {
+                     y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value > 0 ? value + ' dias' : 'N/A';
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        
+        // --- Render Charts ---
+        const costChart = new Chart(document.getElementById('costChart'), costConfig);
+        const timeChart = new Chart(document.getElementById('timeChart'), timeConfig);
+        
+        // --- Interactivity Function ---
+        function toggleDetails(button) {
+            const card = button.parentElement;
+            const details = card.querySelector('.card-details');
+            
+            if (details.style.display === 'block') {
+                details.style.display = 'none';
+                button.textContent = 'Ver Detalhes';
+            } else {
+                details.style.display = 'block';
+                button.textContent = 'Ocultar Detalhes';
+            }
+        }
+    </script>
 
 </body>
 </html>
